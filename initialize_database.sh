@@ -2,8 +2,9 @@
 # Pull parameters for psql connections from a shared file
 # to be used across files.
 source ./shared_parameters.sh
+set -e
 
-if ["$CREATDB" = "true"]; then
+if ["$CREATEDB" = "true"]; then
     createdb nyc-taxi-data
 fi
 

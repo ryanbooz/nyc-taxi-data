@@ -6,5 +6,6 @@ drop table fhv_trips_staging;
 drop table hvfhs_licenses;
 drop table trips;
 drop table uber_trips_2014;
+drop table taxi_zones;
 drop table yellow_tripdata_staging;
 drop table green_tripdata_staging;
