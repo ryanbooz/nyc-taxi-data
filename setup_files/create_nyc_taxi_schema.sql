@@ -138,7 +138,7 @@ CREATE TABLE cab_types (
 INSERT INTO cab_types (type) VALUES ('yellow'), ('green');
 
 CREATE TABLE trips (
-  id bigserial primary key,
+  id bigserial,
   cab_type_id integer,
   vendor_id text,
   pickup_datetime timestamp without time zone,
@@ -165,7 +165,8 @@ CREATE TABLE trips (
   pickup_nyct2010_gid integer,
   dropoff_nyct2010_gid integer,
   pickup_location_id integer,
-  dropoff_location_id integer
+  dropoff_location_id integer,
+  CONSTRAINT pk_trips PRIMARY KEY (id, pickup_datetime)
 );
 
 CREATE TABLE central_park_weather_observations (
