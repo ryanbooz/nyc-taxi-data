@@ -1,4 +1,4 @@
-CREATE EXTENSION postgis;
+CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE UNLOGGED TABLE green_tripdata_staging (
   id bigserial primary key,
@@ -188,7 +188,7 @@ DO
 $do$
 BEGIN
    IF EXISTS (SELECT 1 FROM pg_available_extensions WHERE name = 'timescaledb'  and pg_available_extensions.installed_version is not null) THEN
-      SELECT create_hypertable('trips','pickup_datetime', chunk_time_interval=>INTERVAL '14 days');
+      PERFORM create_hypertable('trips','pickup_datetime', chunk_time_interval=>INTERVAL '14 days');
       --RAISE NOTICE 'Whatever'; -- see Pavel's answer
    END IF;
 END
