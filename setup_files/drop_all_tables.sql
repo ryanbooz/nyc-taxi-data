@@ -1,0 +1,9 @@
+drop table cab_types;
+drop table fhv_bases;
+drop table central_park_weather_observations;
+drop table fhv_trips;
+drop table fhv_trips_staging;
+drop table hvfhs_licenses;
+drop table trips;
+drop table uber_trips_2014;
+drop table yellow_tripdata_staging;
