@@ -52,6 +52,6 @@ CSV.open("fhv_monthly_data.csv", "wb") do |csv|
 end
 
 # create tables and import data
-system(%{psql nyc-taxi-data -f create_statistics_tables.sql})
-system(%{sort -u tlc_monthly_data.csv | psql nyc-taxi-data -c "COPY tlc_monthly_reports FROM stdin CSV;"})
-system(%{cat fhv_monthly_data.csv | psql nyc-taxi-data -c "COPY fhv_monthly_reports FROM stdin CSV;"})
+system(%{psql ${PG_URI} -f create_statistics_tables.sql})
+system(%{sort -u tlc_monthly_data.csv | psql ${PG_URI} -c "COPY tlc_monthly_reports FROM stdin CSV;"})
+system(%{cat fhv_monthly_data.csv | psql ${PG_URI} -c "COPY fhv_monthly_reports FROM stdin CSV;"})

@@ -1,6 +1,6 @@
 CREATE EXTENSION postgis;
 
-CREATE TABLE green_tripdata_staging (
+CREATE UNLOGGED TABLE green_tripdata_staging (
   id bigserial primary key,
   vendor_id text,
   lpep_pickup_datetime text,
@@ -33,6 +33,8 @@ WITH (
   autovacuum_enabled = false,
   toast.autovacuum_enabled = false
 );
+
+
 /*
 N.B. junk columns are there because some tripdata file headers are
 inconsistent with the actual data, e.g. header says 20 or 21 columns per row,
@@ -40,7 +42,7 @@ but data actually has 22 or 23 columns per row, which COPY doesn't like.
 junk1 and junk2 should always be null
 */
 
-CREATE TABLE yellow_tripdata_staging (
+CREATE UNLOGGED TABLE yellow_tripdata_staging (
   id bigserial primary key,
   vendor_id text,
   tpep_pickup_datetime text,
@@ -72,7 +74,7 @@ WITH (
   toast.autovacuum_enabled = false
 );
 
-CREATE TABLE uber_trips_2014 (
+CREATE UNLOGGED TABLE uber_trips_2014 (
   id serial primary key,
   pickup_datetime timestamp without time zone,
   pickup_latitude numeric,
@@ -80,7 +82,7 @@ CREATE TABLE uber_trips_2014 (
   base_code text
 );
 
-CREATE TABLE fhv_trips_staging (
+CREATE UNLOGGED TABLE fhv_trips_staging (
   dispatching_base_num text,
   pickup_datetime text,
   dropoff_datetime text,
@@ -177,3 +179,16 @@ CREATE TABLE central_park_weather_observations (
   min_temperature numeric,
   average_wind_speed numeric
 );
+
+/*
+* Create a hypertable if TimescaleDB is installed
+*/
+DO
+$do$
+BEGIN
+   IF EXISTS (SELECT 1 FROM pg_available_extensions WHERE name = 'timescaledb'  and pg_available_extensions.installed_version is not null) THEN
+      SELECT create_hypertable('trips','pickup_datetime', chunk_time_interval=>INTERVAL '14 days');
+      --RAISE NOTICE 'Whatever'; -- see Pavel's answer
+   END IF;
+END
+$do$;
