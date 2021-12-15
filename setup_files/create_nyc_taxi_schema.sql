@@ -99,7 +99,7 @@ WITH (
 );
 
 CREATE TABLE fhv_trips (
-  id bigserial primary key,
+  id bigserial,
   dispatching_base_num text,
   pickup_datetime timestamp without time zone,
   dropoff_datetime timestamp without time zone,
@@ -107,7 +107,8 @@ CREATE TABLE fhv_trips (
   dropoff_location_id integer,
   shared_ride integer,
   hvfhs_license_num text,
-  affiliated_base_num text
+  affiliated_base_num text,
+  CONSTRAINT pk_trips PRIMARY KEY (id, pickup_datetime)
 );
 
 CREATE TABLE fhv_bases (
@@ -189,7 +190,8 @@ $do$
 BEGIN
    IF EXISTS (SELECT 1 FROM pg_available_extensions WHERE name = 'timescaledb'  and pg_available_extensions.installed_version is not null) THEN
       PERFORM create_hypertable('trips','pickup_datetime', chunk_time_interval=>INTERVAL '14 days');
-      --RAISE NOTICE 'Whatever'; -- see Pavel's answer
+
+      PERFORM create_hypertable('fhv_trips','pickup_datetime', chunk_time_interval=>INTERVAL '14 days');
    END IF;
 END
 $do$;
